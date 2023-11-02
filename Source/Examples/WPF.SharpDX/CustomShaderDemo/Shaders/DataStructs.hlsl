@@ -276,6 +276,22 @@ struct CustomVSInput
     int l : LABEL;
 };
 
+struct VSInputDASH
+{
+    float4 p : POSITION;
+    float4 c : COLOR;
+    //float l : DISTANCE;
+};
+
+struct GSInputDASH
+{
+    float4 p : SV_POSITION;
+    float4 wp : POSITION0;
+    float4 c : COLOR;
+    float4 vEye : POSITION1;
+    //float l : DISTANCE;
+};
+
 struct GSInputPS
 {
     float4 p : SV_POSITION;

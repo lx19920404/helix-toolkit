@@ -27,6 +27,18 @@ namespace CustomShaderDemo
             new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\vsCustomPoint.cso"));
     }
 
+    public static class DashVSShaderDescription
+    {
+        public static ShaderDescription VSDashLine = new ShaderDescription(nameof(VSDashLine), ShaderStage.Vertex,
+            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\vsDashLine.cso"));
+    }
+
+    public static class DashPSShaderDescription
+    {
+        public static ShaderDescription PSDashLine = new ShaderDescription(nameof(PSDashLine), ShaderStage.Pixel,
+            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\psDashLine.cso"));
+    }
+
     public class CustomEffectsManager : DefaultEffectsManager
     {
         public CustomEffectsManager()
@@ -50,6 +62,22 @@ namespace CustomShaderDemo
                 DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLessEqual,
                 InputLayoutDescription = new InputLayoutDescription(ShaderHelper.LoadShaderCode(@"Shaders\vsCustomPoint.cso"), CustomInputLayout.CustomVSInput),
                 
+            });
+
+            var lines = GetTechnique(DefaultRenderTechniqueNames.Lines);
+            lines.AddPass(new ShaderPassDescription("DashLinePass")
+            {
+                ShaderList = new[]
+                {
+                    DashVSShaderDescription.VSDashLine,
+                    //DefaultVSShaderDescriptions.VSPoint,
+                    DefaultGSShaderDescriptions.GSLine,
+                    //DefaultPSShaderDescriptions.PSLine,
+                    DashPSShaderDescription.PSDashLine,
+                },
+                BlendStateDescription = DefaultBlendStateDescriptions.BSAlphaBlend,
+                DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLessEqual,
+                InputLayoutDescription = new InputLayoutDescription(ShaderHelper.LoadShaderCode(@"Shaders\vsDashLine.cso"), CustomInputLayout.VSDashLineInput),
             });
         }
     }

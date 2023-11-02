@@ -53,6 +53,7 @@
             ShowCoordinateSystem="True"
             SubTitle="{Binding SubTitle}"
             TextBrush="Black"
+            Background="AliceBlue"
             UseDefaultGestures="False">
             <hx:Viewport3DX.InputBindings>
                 <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
@@ -86,6 +87,7 @@
                 Material="{Binding SphereMaterial}" />-->
             <!--<hx:PointMaterialGeometryModel3D x:Name="model" Geometry="{Binding PointModel}" Material="{Binding CustomPointMaterial}" Transform="{Binding PointTransform}"/>-->
             <hx11:PointCloudModel3D x:Name="model" Geometry="{Binding PointModel}" Material="{Binding CustomPointMaterial}" Transform="{Binding PointTransform}"/>
+            <hx11:DashLineModel3D x:Name="line" Geometry="{Binding LineModel}" Material="{Binding DashLineMaterial}" Transform="{Binding LineTransform}"/>
             <hx:ContinuousRender3D/>
         </hx:Viewport3DX>
 

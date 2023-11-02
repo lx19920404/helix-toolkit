@@ -49,7 +49,7 @@ namespace CustomShaderDemo
         {
             Point3D eye = view1.Camera.Position;
             var indices = model.Geometry.Indices;
-            for(int i = 0; i < indices.Count; i++)
+            for (int i = 0; i < indices.Count; i++)
             {
                 indices[i]++;
             }

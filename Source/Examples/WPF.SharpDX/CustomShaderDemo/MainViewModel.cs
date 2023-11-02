@@ -22,6 +22,7 @@ namespace CustomShaderDemo
     using Transform3D = System.Windows.Media.Media3D.Transform3D;
     using TranslateTransform3D = System.Windows.Media.Media3D.TranslateTransform3D;
     using Baidu.Guoke.Controller;
+    using CustomShaderDemo.Dashline;
 
     public class MainViewModel : BaseViewModel
     {
@@ -33,10 +34,13 @@ namespace CustomShaderDemo
         public PhongMaterial SphereMaterial { private set; get; } = PhongMaterials.Copper;
 
         public PointGeometry3D PointModel { private set; get; }
+        public LineGeometry3D LineModel { private set; get; }
 
         public PointMaterial CustomPointMaterial { get; }
+        public LineMaterial DashLineMaterial { get; }
 
         public Transform3D PointTransform { get; } = new TranslateTransform3D(10, 0, 0);
+        public Transform3D LineTransform { get; } = new TranslateTransform3D(0, 10, 10);
 
         private Color startColor;
         /// <summary>
@@ -192,7 +196,7 @@ namespace CustomShaderDemo
             AxisLabel.TextInfo.Add(new TextInfo() { Origin = new Vector3(0, 0, 11), Text = "Z", Foreground = Colors.Blue.ToColor4() });
 
             builder = new MeshBuilder(true);
-            builder.AddSphere(new Vector3(-15, 0, 0), 5, 3500, 3500);
+            builder.AddSphere(new Vector3(-15, 0, 0), 5, 350, 350);
             SphereModel = builder.ToMesh();
 
             GenerateNoiseCommand = new RelayCommand((o) => { CreatePerlinNoise(); });
@@ -221,6 +225,11 @@ namespace CustomShaderDemo
                 Indices = indices
             };
             CustomPointMaterial = new CustomPointMaterial() { Color = Colors.Yellow, Size = new System.Windows.Size(1, 1) };
+
+            var dashLineBuilder = new LineBuilder();
+            dashLineBuilder.AddLine(new Vector3(0, 1, 1), new Vector3(1000, 1, 1));
+            LineModel = dashLineBuilder.ToLineGeometry3D();
+            DashLineMaterial = new DashLineMaterial() { Color = Colors.Red, Thickness = 5 };
         }
 
         public static IEnumerable<Color4> GetGradients(Color4 start, Color4 mid, Color4 end, int steps)

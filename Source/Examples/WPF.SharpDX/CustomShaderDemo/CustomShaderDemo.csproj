@@ -28,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -74,6 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomEffectsManager.cs" />
+    <Compile Include="Dashline\DashLineMaterial.cs" />
+    <Compile Include="Dashline\DashLineMaterialCore.cs" />
+    <Compile Include="Dashline\DashLineBufferModel.cs" />
+    <Compile Include="Dashline\DashLineVertex.cs" />
+    <Compile Include="Dashline\DashLineNode.cs" />
+    <Compile Include="Dashline\DashLineModel3D.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -157,6 +164,12 @@
     <Content Include="Shaders\Common.hlsl" />
     <Content Include="Shaders\CommonBuffers.hlsl" />
     <Content Include="Shaders\DataStructs.hlsl" />
+    <HLSLShader Include="Shaders\vsDashLine.hlsl">
+      <ShaderProfile>vs_4_0</ShaderProfile>
+    </HLSLShader>
+    <HLSLShader Include="Shaders\psDashLine.hlsl">
+      <ShaderProfile>ps_4_0</ShaderProfile>
+    </HLSLShader>
     <HLSLShader Include="Shaders\vsCustomPoint.hlsl">
       <ShaderProfile>vs_4_0</ShaderProfile>
     </HLSLShader>
