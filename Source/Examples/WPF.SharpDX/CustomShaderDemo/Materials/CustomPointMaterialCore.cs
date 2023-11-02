@@ -1,9 +1,7 @@
 ﻿using HelixToolkit.Wpf.SharpDX;
-using HelixToolkit.Wpf.SharpDX.Core;
 using HelixToolkit.Wpf.SharpDX.Model;
-using SharpDX;
 
-namespace CustomShaderDemo.Materials
+namespace Baidu.Guoke.Controller
 {
     public class CustomPointMaterialCore : PointMaterialCore
     {

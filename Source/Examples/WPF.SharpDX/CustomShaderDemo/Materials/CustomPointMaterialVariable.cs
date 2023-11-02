@@ -4,22 +4,18 @@ using HelixToolkit.Wpf.SharpDX.Model;
 using HelixToolkit.Wpf.SharpDX.Render;
 using HelixToolkit.Wpf.SharpDX.Shaders;
 using SharpDX;
-using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
-namespace CustomShaderDemo.Materials
+namespace Baidu.Guoke.Controller
 {
     public class CustomPointMaterialVariable : PointMaterialVariable
     {
         private readonly ConstantBufferComponent customConstantBuffer;
-        private Vector3 colorChanges = new Vector3(1, 1, 1);
 
         public CustomPointMaterialVariable(IEffectsManager manager, IRenderTechnique technique, PointMaterialCore materialCore,
             string pointPassName = "CustomPointPass")
             : base(manager, technique, materialCore, pointPassName)
         {
-            customConstantBuffer = Collect(new ConstantBufferComponent(new ConstantBufferDescription("CustomBuffer", Marshal.SizeOf<Vector4>())));
+            customConstantBuffer = Collect(new ConstantBufferComponent(new ConstantBufferDescription("CustomBuffer", 16 * 256)));
             customConstantBuffer.Attach(technique);
         }
 
@@ -30,11 +26,15 @@ namespace CustomShaderDemo.Materials
 
         public override bool BindMaterialResources(RenderContext context, DeviceContextProxy deviceContext, ShaderPass shaderPass)
         {
-            colorChanges += new Vector3(0.1f, 0.3f, 0.7f);
-            colorChanges.X %= 100;
-            colorChanges.Y %= 100;
-            colorChanges.Z %= 100;
-            customConstantBuffer.WriteValueByName("random_color", new Vector3(colorChanges.X / 100, colorChanges.Y / 100, colorChanges.Z / 100));
+            UtilColor3D.Init_Intensity_Colors_Map();
+            for(int i = 0; i < 256; i++)
+            {
+                Color4 color = UtilColor3D.st_Intensity_Colors_Map_Dic[i];
+                customConstantBuffer.WriteValue(color.Red, i * 16 + 0);
+                customConstantBuffer.WriteValue(color.Green, i * 16 + 4);
+                customConstantBuffer.WriteValue(color.Blue, i * 16 + 8);
+                customConstantBuffer.WriteValue(color.Alpha, i * 16 + 12);
+            }
             customConstantBuffer.Upload(deviceContext);
             return base.BindMaterialResources(context, deviceContext, shaderPass);
         }
@@ -43,6 +43,14 @@ namespace CustomShaderDemo.Materials
         {
             customConstantBuffer.Detach();
             base.OnDispose(disposeManagedResources);
+        }
+
+        public override void Draw(DeviceContextProxy deviceContext, IAttachableBufferModel bufferModel, int instanceCount)
+        {
+            if (bufferModel.IndexBuffer.ElementCount == 0)
+                DrawPoints(deviceContext, bufferModel.VertexBuffer[0].ElementCount, instanceCount);
+            else
+                DrawIndexed(deviceContext, bufferModel.IndexBuffer.ElementCount, instanceCount);
         }
     }
 }

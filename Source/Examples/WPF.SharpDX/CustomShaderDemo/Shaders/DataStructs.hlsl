@@ -269,6 +269,13 @@ struct VSInputPS
     float4 mr3 : TEXCOORD3;
 };
 
+struct CustomVSInput
+{
+    float4 p : POSITION;
+    //float4 c : COLOR;
+    int l : LABEL;
+};
+
 struct GSInputPS
 {
     float4 p : SV_POSITION;

@@ -1,20 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+using Baidu.Guoke.Controller;
 using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Shaders;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
+using System;
+using System.IO;
 
 namespace CustomShaderDemo
 {
-    public static class CustomShaderNames
-    {
-        public static readonly string DataSampling = "DataSampling";
-        public static readonly string NoiseMesh = "NoiseMesh";
-        public static readonly string TexData = "texData";
-        public static readonly string TexDataSampler = "texDataSampler";
-    }
     public static class ShaderHelper
     {
         public static byte[] LoadShaderCode(string path)
@@ -30,35 +21,10 @@ namespace CustomShaderDemo
         }
     }
 
-    /// <summary>
-    /// Build using Nuget Micorsoft.HLSL.Microsoft.HLSL.CSharpVB automatically during project build
-    /// </summary>
     public static class CustomVSShaderDescription
     {
-        public static byte[] VSMeshDataSamplerByteCode
-        {
-            get
-            {
-                return ShaderHelper.LoadShaderCode(@"Shaders\vsMeshDataSampling.cso");
-            }
-        }
-        public static ShaderDescription VSDataSampling = new ShaderDescription(nameof(VSDataSampling), ShaderStage.Vertex,
-            new ShaderReflector(), VSMeshDataSamplerByteCode);
-    }
-    /// <summary>
-    /// Build using Nuget Micorsoft.HLSL.Microsoft.HLSL.CSharpVB automatically during project build
-    /// </summary>
-    public static class CustomPSShaderDescription
-    {
-        public static ShaderDescription PSDataSampling = new ShaderDescription(nameof(PSDataSampling), ShaderStage.Pixel,
-            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\psMeshDataSampling.cso"));
-
-        public static ShaderDescription PSNoiseMesh = new ShaderDescription(nameof(PSNoiseMesh), ShaderStage.Pixel,
-            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\psMeshNoiseBlinnPhong.cso"));
-
-
-        public static ShaderDescription PSCustomPoint = new ShaderDescription(nameof(PSCustomPoint), ShaderStage.Pixel,
-            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\psCustomPoint.cso"));
+        public static ShaderDescription VSCustomPoint = new ShaderDescription(nameof(VSCustomPoint), ShaderStage.Vertex,
+            new ShaderReflector(), ShaderHelper.LoadShaderCode(@"Shaders\vsCustomPoint.cso"));
     }
 
     public class CustomEffectsManager : DefaultEffectsManager
@@ -71,67 +37,19 @@ namespace CustomShaderDemo
 
         private void LoadCustomTechniqueDescriptions()
         {
-            var dataSampling = new TechniqueDescription(CustomShaderNames.DataSampling)
-            {
-                InputLayoutDescription = new InputLayoutDescription(CustomVSShaderDescription.VSMeshDataSamplerByteCode, DefaultInputLayout.VSInput),
-                PassDescriptions = new[]
-                {
-                    new ShaderPassDescription(DefaultPassNames.ColorStripe1D)
-                    {
-                        ShaderList = new[]
-                        {
-                            CustomVSShaderDescription.VSDataSampling,
-                            //DefaultVSShaderDescriptions.VSMeshDefault,
-                            CustomPSShaderDescription.PSDataSampling
-                        },
-                        BlendStateDescription = DefaultBlendStateDescriptions.BSAlphaBlend,
-                        DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLess
-                    },
-                    new ShaderPassDescription(DefaultPassNames.Wireframe)
-                    {
-                        ShaderList = new[]
-                        {
-                            CustomVSShaderDescription.VSDataSampling,
-                            DefaultPSShaderDescriptions.PSMeshWireframe
-                        },
-                        BlendStateDescription = DefaultBlendStateDescriptions.BSAlphaBlend,
-                        DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLess
-                    }
-                }
-            };
-            var noiseMesh = new TechniqueDescription(CustomShaderNames.NoiseMesh)
-            {
-                InputLayoutDescription = new InputLayoutDescription(DefaultVSShaderByteCodes.VSMeshDefault, DefaultInputLayout.VSInput),
-                PassDescriptions = new[]
-                {
-                    new ShaderPassDescription(DefaultPassNames.Default)
-                    {
-                        ShaderList = new[]
-                        {
-                            DefaultVSShaderDescriptions.VSMeshDefault,
-                            CustomPSShaderDescription.PSNoiseMesh
-                        },
-                        BlendStateDescription = DefaultBlendStateDescriptions.BSAlphaBlend,
-                        DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLess
-                    }
-                }
-            };
-
-            AddTechnique(dataSampling);
-            AddTechnique(noiseMesh);
-
             var points = GetTechnique(DefaultRenderTechniqueNames.Points);
             points.AddPass(new ShaderPassDescription("CustomPointPass")
             {
                 ShaderList = new[]
                 {
-                    DefaultVSShaderDescriptions.VSPoint,
+                    CustomVSShaderDescription.VSCustomPoint,
                     DefaultGSShaderDescriptions.GSPoint,
-                    CustomPSShaderDescription.PSCustomPoint
+                    DefaultPSShaderDescriptions.PSPoint,
                 },
                 BlendStateDescription = DefaultBlendStateDescriptions.BSAlphaBlend,
-                DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLessEqual
-
+                DepthStencilStateDescription = DefaultDepthStencilDescriptions.DSSDepthLessEqual,
+                InputLayoutDescription = new InputLayoutDescription(ShaderHelper.LoadShaderCode(@"Shaders\vsCustomPoint.cso"), CustomInputLayout.CustomVSInput),
+                
             });
         }
     }

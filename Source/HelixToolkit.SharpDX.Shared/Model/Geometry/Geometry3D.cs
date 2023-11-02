@@ -63,7 +63,10 @@ namespace HelixToolkit.UWP
         {
             get
             {
-                return position;
+                if (position == null || position.Count == 0)
+                    return null;
+                else
+                    return position;
             }
             set
             {

@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:CustomShaderDemo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pt="http://propertytools.org/wpf"
+    xmlns:hx11="clr-namespace:Baidu.Guoke.Controller"
     Title="SharpDX in WPF"
     Width="800"
     Height="500"
@@ -66,24 +67,25 @@
                 <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
             </hx:Viewport3DX.InputBindings>
             <hx:DirectionalLight3D Direction="{Binding Camera.LookDirection}" Color="White" />
-            <local:CustomMeshGeometryModel3D
+            <!--<local:CustomMeshGeometryModel3D
                 x:Name="dataVisual"
                 FillMode="{Binding FillMode}"
                 Geometry="{Binding Model}"
                 Material="{Binding ModelMaterial}"
                 RenderWireframe="True"
-                WireframeColor="#3F3B3B3B" />
+                WireframeColor="#3F3B3B3B" />-->
             <hx:LineGeometryModel3D Geometry="{Binding AxisModel}" Color="White" />
             <hx:BillboardTextModel3D
                 x:Name="text"
                 Geometry="{Binding AxisLabel}"
                 IsTransparent="True" />
-            <local:CustomNoiseMeshModel3D
+            <!--<local:CustomNoiseMeshModel3D
                 CullMode="Back"
                 FillMode="{Binding FillMode}"
                 Geometry="{Binding SphereModel}"
-                Material="{Binding SphereMaterial}" />
-            <hx:PointMaterialGeometryModel3D Geometry="{Binding PointModel}" Material="{Binding CustomPointMaterial}" Transform="{Binding PointTransform}"/>
+                Material="{Binding SphereMaterial}" />-->
+            <!--<hx:PointMaterialGeometryModel3D x:Name="model" Geometry="{Binding PointModel}" Material="{Binding CustomPointMaterial}" Transform="{Binding PointTransform}"/>-->
+            <hx11:PointCloudModel3D x:Name="model" Geometry="{Binding PointModel}" Material="{Binding CustomPointMaterial}" Transform="{Binding PointTransform}"/>
             <hx:ContinuousRender3D/>
         </hx:Viewport3DX>
 

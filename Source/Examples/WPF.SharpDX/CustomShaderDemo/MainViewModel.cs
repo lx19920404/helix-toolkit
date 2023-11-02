@@ -6,7 +6,6 @@
 
 namespace CustomShaderDemo
 {
-    using CustomShaderDemo.Materials;
     using DemoCore;
     using HelixToolkit.Wpf.SharpDX;
     using SharpDX;
@@ -22,6 +21,8 @@ namespace CustomShaderDemo
     using Vector3D = System.Windows.Media.Media3D.Vector3D;
     using Transform3D = System.Windows.Media.Media3D.Transform3D;
     using TranslateTransform3D = System.Windows.Media.Media3D.TranslateTransform3D;
+    using Baidu.Guoke.Controller;
+
     public class MainViewModel : BaseViewModel
     {
         public MeshGeometry3D Model { get; private set; }
@@ -33,7 +34,7 @@ namespace CustomShaderDemo
 
         public PointGeometry3D PointModel { private set; get; }
 
-        public CustomPointMaterial CustomPointMaterial { get; }
+        public PointMaterial CustomPointMaterial { get; }
 
         public Transform3D PointTransform { get; } = new TranslateTransform3D(10, 0, 0);
 
@@ -149,7 +150,7 @@ namespace CustomShaderDemo
                 FarPlaneDistance = 5000
             };
 
-            EffectsManager = new CustomEffectsManager();
+            EffectsManager = new CustomEffectsManager();// CustomEffectsManager();
            
 
             var builder = new MeshBuilder(true);
@@ -191,17 +192,35 @@ namespace CustomShaderDemo
             AxisLabel.TextInfo.Add(new TextInfo() { Origin = new Vector3(0, 0, 11), Text = "Z", Foreground = Colors.Blue.ToColor4() });
 
             builder = new MeshBuilder(true);
-            builder.AddSphere(new Vector3(-15, 0, 0), 5);
+            builder.AddSphere(new Vector3(-15, 0, 0), 5, 3500, 3500);
             SphereModel = builder.ToMesh();
 
             GenerateNoiseCommand = new RelayCommand((o) => { CreatePerlinNoise(); });
             CreatePerlinNoise();
-
-            PointModel = new PointGeometry3D()
+            int count = SphereModel.Positions.Count;
+            IntCollection labels = new IntCollection(count);
+            List<int> indexList = new List<int>();
+            for(int i = 0; i < count; i++)
             {
-                Positions = SphereModel.Positions
+                labels.Add(i * 256 / count);
+            }
+            for(int i = 0; i < count; i++)
+            {
+                if ((i % 100) == 0)
+                    indexList.Add(i);
+            }
+            IntCollection indices = new IntCollection(indexList.Count);
+            for(int i = 0; i < indexList.Count; i++)
+            {
+                indices.Add(indexList[i]);
+            }
+            PointModel = new PointCloudGeometry3D()
+            {
+                CustomPositions = SphereModel.Positions,
+                Labels = labels,
+                Indices = indices
             };
-            CustomPointMaterial = new CustomPointMaterial() { Color = Colors.White };
+            CustomPointMaterial = new CustomPointMaterial() { Color = Colors.Yellow, Size = new System.Windows.Size(1, 1) };
         }
 
         public static IEnumerable<Color4> GetGradients(Color4 start, Color4 mid, Color4 end, int steps)

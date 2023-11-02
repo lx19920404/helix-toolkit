@@ -1,18 +1,12 @@
 ﻿using HelixToolkit.Wpf.SharpDX;
 using HelixToolkit.Wpf.SharpDX.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Media = System.Windows.Media;
 
-namespace CustomShaderDemo.Materials
+namespace Baidu.Guoke.Controller
 {
     public class CustomPointMaterial : PointMaterial
     {
-         protected override MaterialCore OnCreateCore()
+        protected override MaterialCore OnCreateCore()
         {
             return new CustomPointMaterialCore()
             {
@@ -28,7 +22,6 @@ namespace CustomShaderDemo.Materials
             };
         }
 
-#if !NETFX_CORE
         protected override Freezable CreateInstanceCore()
         {
             return new CustomPointMaterial()
@@ -36,6 +29,5 @@ namespace CustomShaderDemo.Materials
                 Name = Name
             };
         }
-#endif
     }
 }
